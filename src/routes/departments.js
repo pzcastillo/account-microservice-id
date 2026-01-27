@@ -43,10 +43,10 @@ const authenticateJWT = require('../middleware/auth');
  *                     type: string
  */
 router.get(
-  '/',
-  authenticateJWT,
-  requirePermission(['departments:get']),
-  controller.getAll
+    '/',
+    authenticateJWT,
+    requirePermission(['departments:get']),
+    controller.getAll
 );
 
 /**
@@ -71,10 +71,10 @@ router.get(
  *         description: Department not found
  */
 router.get(
-  '/:id',
-  authenticateJWT,
-  requirePermission(['departments:get:id']),
-  controller.getById
+    '/:id',
+    authenticateJWT,
+    requirePermission(['departments:get:id']),
+    controller.getById
 );
 
 /**
@@ -106,10 +106,10 @@ router.get(
  *         description: Department created
  */
 router.post(
-  '/',
-  authenticateJWT,
-  requirePermission(['departments:create']),
-  controller.create
+    '/',
+    authenticateJWT,
+    requirePermission(['departments:create']),
+    controller.create
 );
 
 /**
@@ -143,10 +143,10 @@ router.post(
  *         description: Updated department
  */
 router.put(
-  '/:id',
-  authenticateJWT,
-  requirePermission(['departments:update']),
-  controller.update
+    '/:id',
+    authenticateJWT,
+    requirePermission(['departments:update']),
+    controller.update
 );
 
 /**
@@ -181,10 +181,10 @@ router.put(
  *         description: Updated status
  */
 router.patch(
-  '/:id/status',
-  authenticateJWT,
-  requirePermission(['departments:patch:status']),
-  controller.updateStatus
+    '/:id/status',
+    authenticateJWT,
+    requirePermission(['departments:patch:status']),
+    controller.updateStatus
 );
 
 /**
@@ -207,10 +207,10 @@ router.patch(
  *         description: Department deleted
  */
 router.delete(
-  '/:id',
-  authenticateJWT,
-  requirePermission(['departments:delete']),
-  controller.remove
+    '/:id',
+    authenticateJWT,
+    requirePermission(['departments:delete']),
+    controller.remove
 );
 
 module.exports = router;

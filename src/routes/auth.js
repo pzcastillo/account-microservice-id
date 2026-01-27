@@ -9,12 +9,12 @@ const controller = require('../controllers/authController');
  * body: { usernameOrEmail, password }
  */
 router.post('/login', 
-  [
-  body('usernameOrEmail').notEmpty().withMessage('usernameOrEmail is required'),
-  body('password').notEmpty().withMessage('password is required'),
-  validate
-  ],
-  controller.login
+    [
+    body('usernameOrEmail').notEmpty().withMessage('usernameOrEmail is required'),
+    body('password').notEmpty().withMessage('password is required'),
+    validate
+    ],
+    controller.login
 );
 
 module.exports = router;
