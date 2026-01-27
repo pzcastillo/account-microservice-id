@@ -1,90 +1,95 @@
 const db = require('../db');
 
+const {
+    insertDepartment,
+    findAll,
+    findById,
+    updateById,
+    updateStatus,
+    removeById,
+} = require('../repo/departmentRepo');
+
 async function createDepartment({ department_name, description, status }) {
-  if (!department_name) throw new Error('department_name is required');
+    if (!department_name?.trim()) {
+        throw { status: 400, message: 'department_name is required' };
+    }
 
-  const result = await db.query(
-    `INSERT INTO departments (department_name, description, status)
-     VALUES ($1, $2, $3)
-     RETURNING *`,
-    [department_name, description || null, status || 'active']
-  );
+    const department = await insertDepartment({
+        department_name: department_name.trim(),
+        description: description?.trim() || null,
+        status: status || 'active',
+    });
 
-  return result.rows[0];
+    if (!department) {
+        throw { status: 500, message: 'Failed to create department' };
+    }
+
+    return department;
 }
 
 async function getAllDepartments() {
-  const result = await db.query(
-    `SELECT department_id, department_name, description, status, created_at, updated_at
-     FROM departments
-     ORDER BY created_at ASC`
-  );
-  return result.rows;
+    return await findAll();
 }
 
 async function getDepartmentById(id) {
-  const result = await db.query(
-    `SELECT department_id, department_name, description, status, created_at, updated_at
-     FROM departments
-     WHERE department_id = $1`,
-    [id]
-  );
-  return result.rows[0];
+    return await findById(id);
 }
 
-async function updateDepartment(id, { department_name, description, status }) {
-  const fields = [];
-  const values = [];
-  let idx = 1;
+async function updateDepartment(id, fields = {}) {
+    const updates = {};
 
-  if (department_name) {
-    fields.push(`department_name = $${idx++}`);
-    values.push(department_name);
-  }
-  if (description) {
-    fields.push(`description = $${idx++}`);
-    values.push(description);
-  }
-  if (status) {
-    fields.push(`status = $${idx++}`);
-    values.push(status);
-  }
+    if ('department_name' in fields) {
+        if (!fields.department_name?.trim()) {
+            throw { status: 400, message: 'department_name cannot be empty' };
+        }
+        updates.department_name = fields.department_name.trim();
+    }
 
-  if (fields.length === 0) throw new Error('No fields to update');
+    if ('description' in fields) {
+        updates.description = fields.description?.trim() ?? null;
+    }
 
-  values.push(id); // for WHERE clause
-  const result = await db.query(
-    `UPDATE departments SET ${fields.join(', ')}, updated_at = now() WHERE department_id = $${idx} RETURNING *`,
-    values
-  );
+    if ('status' in fields) {
+        updates.status = fields.status;
+    }
 
-  return result.rows[0];
+    if (Object.keys(updates).length === 0) {
+        return await findById(id); // or throw if you prefer strict behavior
+    }
+
+    const updated = await updateById(id, updates);
+    if (!updated) {
+        throw { status: 404, message: 'Department not found' };
+    }
+
+    return updated;
 }
 
 async function updateDepartmentStatus(id, status) {
-  if (!status || !['active', 'inactive'].includes(status)) {
-    throw new Error('status must be "active" or "inactive"');
-  }
+    if (!status || !['active', 'inactive'].includes(status)) {
+        throw { status: 400, message: 'status must be "active" or "inactive"' };
+    }
 
-  const result = await db.query(
-    `UPDATE departments SET status = $1, updated_at = now() WHERE department_id = $2 RETURNING *`,
-    [status, id]
-  );
-  return result.rows[0];
+    const updated = await updateStatus(id, status);
+    if (!updated) {
+        throw { status: 404, message: 'Department not found' };
+    }
+
+    return updated;
 }
 
 async function deleteDepartment(id) {
-  await db.query(
-    `DELETE FROM departments WHERE department_id = $1`,
-    [id]
-  );
+    const deleted = await removeById(id);
+    if (!deleted) {
+        throw { status: 404, message: 'Department not found or already deleted' };
+    }
 }
 
 module.exports = {
-  createDepartment,
-  getAllDepartments,
-  getDepartmentById,
-  updateDepartment,
-  updateDepartmentStatus,
-  deleteDepartment
+    createDepartment,
+    getAllDepartments,
+    getDepartmentById,
+    updateDepartment,
+    updateDepartmentStatus,
+    deleteDepartment
 };
