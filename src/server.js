@@ -27,5 +27,5 @@ app.use(errorHandler);
 
 const port = config.port;
 app.listen(port, () => {
-  console.log(`Account service listening on port ${port}`);
+    console.log(`Account service listening on port ${port}`);
 });
