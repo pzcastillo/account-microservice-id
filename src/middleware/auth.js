@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const { findAccountById } = require('../repo/accountRepo');
+const { findAccountById } = require('../repo/authRepo');
 
 async function authenticate(req, res, next) {
     const auth = req.headers.authorization;
