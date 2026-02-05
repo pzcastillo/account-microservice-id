@@ -60,17 +60,17 @@ const requirePermission = require('../middleware/permission');
  *       403: { description: Forbidden }
  */
 router.post(
-  '/',
-  [
-    authenticate,
-    requirePermission(['accounts:create', 'accounts:create:own-dept']),
-    body('fullname').notEmpty(),
-    body('username').notEmpty(),
-    body('email').isEmail(),
-    body('password').isLength({ min: 8 }),
-    validate
-  ],
-  controller.createAccount
+    '/',
+    [
+        authenticate,
+        requirePermission(['accounts:create', 'accounts:create:own-dept']),
+        body('fullname').notEmpty(),
+        body('username').notEmpty(),
+        body('email').isEmail(),
+        body('password').isLength({ min: 8 }),
+        validate
+    ],
+    controller.createAccount
 );
 
 /**
@@ -108,12 +108,12 @@ router.post(
  *       403: { description: Forbidden }
  */
 router.get(
-  '/',
-  [
-    authenticate,
-    requirePermission(['accounts:read', 'accounts:read_own', 'accounts:read:own-dept'])
-  ],
-  controller.listAccounts
+    '/',
+    [
+        authenticate,
+        requirePermission(['accounts:read', 'accounts:read_own', 'accounts:read:own-dept'])
+    ],
+    controller.listAccounts
 );
 
 /**
@@ -138,13 +138,13 @@ router.get(
  *       404: { description: Account not found }
  */
 router.get(
-  '/:id',
-  [
-    authenticate,
-    requirePermission(['accounts:read', 'accounts:read_own', 'accounts:read:own-dept']),
-    param('id').isUUID()
-  ],
-  controller.getAccount
+    '/:id',
+    [
+        authenticate,
+        requirePermission(['accounts:read', 'accounts:read_own', 'accounts:read:own-dept']),
+        param('id').isUUID()
+    ],
+    controller.getAccount
 );
 
 /**
@@ -179,16 +179,16 @@ router.get(
  *       404: { description: Account not found }
  */
 router.put(
-  '/:id',
-  [
-    authenticate,
-    requirePermission(['accounts:update', 'accounts:update_own', 'accounts:update:own-dept']),
-    param('id').isUUID(),
-    body('email').optional().isEmail(),
-    body('password').optional().isLength({ min: 8 }),
-    validate
-  ],
-  controller.updateAccount
+    '/:id',
+    [
+        authenticate,
+        requirePermission(['accounts:update', 'accounts:update_own', 'accounts:update:own-dept']),
+        param('id').isUUID(),
+        body('email').optional().isEmail(),
+        body('password').optional().isLength({ min: 8 }),
+        validate
+    ],
+    controller.updateAccount
 );
 
 /**
@@ -212,13 +212,13 @@ router.put(
  *       404: { description: Account not found }
  */
 router.post(
-  '/:id/disable',
-  [
-    authenticate,
-    requirePermission(['accounts:disable', 'accounts:disable:own-dept']),
-    param('id').isUUID()
-  ],
-  controller.disableAccount
+    '/:id/disable',
+    [
+        authenticate,
+        requirePermission(['accounts:disable', 'accounts:disable:own-dept']),
+        param('id').isUUID()
+    ],
+    controller.disableAccount
 );
 
 /**
@@ -242,13 +242,13 @@ router.post(
  *       404: { description: Account not found }
  */
 router.delete(
-  '/:id',
-  [
-    authenticate,
-    requirePermission(['accounts:delete', 'accounts:delete:own-dept']),
-    param('id').isUUID()
-  ],
-  controller.deleteAccount
+    '/:id',
+    [
+        authenticate,
+        requirePermission(['accounts:delete', 'accounts:delete:own-dept']),
+        param('id').isUUID()
+    ],
+    controller.deleteAccount
 );
 
 module.exports = router;
